@@ -8,4 +8,6 @@ urlpatterns = [
     path('api/v1/auth/', include('apps.accounts.urls')),
     path('api/v1/auth/login/', TokenObtainPairView.as_view()),
     path('api/v1/auth/refresh/', TokenRefreshView.as_view()),
+    path('api/v1/companies/', include('apps.companies.urls')),
+    path('api/v1/jobs/', include('apps.jobs.urls')),
 ]
