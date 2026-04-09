@@ -21,6 +21,9 @@ class CandidateProfileViewSet(viewsets.ModelViewSet):
         """
         Chaque user ne voit que son profil, sauf les recruteurs qui voient l'ensemble des candidats.
         """
+        if getattr(self, "swagger_fake_view", False):
+            return CandidateProfile.objects.none()
+
         user = self.request.user
         if getattr(user, "role", None) == "RECRUITER":
             return CandidateProfile.objects.all()

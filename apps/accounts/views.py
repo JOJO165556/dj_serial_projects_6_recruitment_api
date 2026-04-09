@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse, inline_serializer
+from rest_framework import serializers as drf_serializers
 
 from .models import User
 from .serializers import (
@@ -85,7 +86,19 @@ class CustomTokenRefreshView(TokenRefreshView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(summary="Déconnexion", description="Blackliste le token JWT.", tags=["Authentification"])
+    @extend_schema(
+        summary="Déconnexion",
+        description="Blackliste le Refresh Token JWT pour invalider la session.",
+        tags=["Authentification"],
+        request=inline_serializer(
+            name="LogoutRequest",
+            fields={"refresh": drf_serializers.CharField()}
+        ),
+        responses={
+            200: OpenApiResponse(description="Déconnexion réussie."),
+            400: OpenApiResponse(description="Token invalide ou manquant."),
+        }
+    )
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
@@ -101,9 +114,16 @@ class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
 
     @extend_schema(
-        summary="Vérifier le code OTP", 
-        description="Valide le code à 6 chiffres envoyé.", 
+        summary="Vérifier le code OTP",
+        description="Valide le code à 6 chiffres envoyé par email pour activer le compte.",
         tags=["Authentification"],
+        request=inline_serializer(
+            name="VerifyOTPRequest",
+            fields={
+                "email": drf_serializers.EmailField(),
+                "code": drf_serializers.CharField(max_length=6),
+            }
+        ),
         responses={
             200: OpenApiResponse(description="Email vérifié et compte activé."),
             400: OpenApiResponse(description="Code invalide, expiré ou introuvable."),
