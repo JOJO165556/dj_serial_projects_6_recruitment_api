@@ -5,6 +5,11 @@ from .validators import validate_file
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
+    """
+    Sérialiseur gérant la réception et la restitution d'une Candidature.
+    Extrait l'ID de l'offre (job_id) pour confier la logique complexe au Service.
+    Applique le validateur 'validate_file' sur les CVs/lettres.
+    """
     job_id = serializers.IntegerField(write_only=True)
     cover_letter = serializers.FileField(validators=[validate_file])
 

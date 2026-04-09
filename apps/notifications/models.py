@@ -3,7 +3,9 @@ from apps.core.models import TimeStampedModel
 
 class Notification(TimeStampedModel):
     """
-    Notification système simple.
+    Modèle asynchrone stockant l'historique des alertes (Notifications).
+    Il est peuplé via les `services.py` de l'application métier pour alerter
+    le candidat ou le recruteur des événements critiques.
     """
 
     user = models.ForeignKey(

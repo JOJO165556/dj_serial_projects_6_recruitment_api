@@ -5,7 +5,10 @@ from apps.jobs.models import JobView
 
 def recruiter_stats(user):
     """
-    Statistiques globales et analytics avancées pour un recruteur.
+    Service Métier : Statistiques Recruteur (Dashboard).
+    Agrège les performances globales des annonces d'un recruteur.
+    Calcule automatiquement le Taux de Conversion, et identifie le poste le plus attractif
+    via une boucle sur les relations inversées (applications.count).
     """
     jobs = JobOffer.objects.filter(company__owner=user)
     applications = Application.objects.filter(job_offer__in=jobs)
@@ -44,7 +47,8 @@ def recruiter_stats(user):
 
 def candidate_stats(user):
     """
-    Statistiques pour un candidat.
+    Service Métier : Dashboard Candidat.
+    Affiche le suivi général de ses postulations (Statuts, Acceptations, Rejets, En cours).
     """
 
     applications = Application.objects.filter(candidate=user)

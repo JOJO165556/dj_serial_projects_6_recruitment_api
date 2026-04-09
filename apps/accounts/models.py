@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
+    """
+    Modèle utilisateur personnalisé centralisant l'authentification et le système de Rôles.
+    Remplace le modèle User standard de Django.
+    """
     class Role(models.TextChoices):
         ADMIN = "ADMIN", "Admin"
         RECRUITER = "RECRUITER", "Recruiter"
@@ -22,6 +26,7 @@ class EmailOTP(models.Model):
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
+    attempts = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.email} - {self.code}"

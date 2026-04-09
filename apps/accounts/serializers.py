@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import authenticate
 
 from .models import User
 
@@ -15,6 +14,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Email already exists")
+        return value
+
+    def validate_role(self, value):
+        """
+        Sécurité (Bloque l'assignation en masse) : 
+        Empêche un utilisateur malveillant de s'inscrire en tant qu'ADMIN
+        tout en autorisant le choix explicite du rôle RECRUITER ou CANDIDATE.
+        """
+        if value == User.Role.ADMIN:
+            raise serializers.ValidationError("You cannot register an Admin account.")
         return value
 
     def create(self, validated_data):

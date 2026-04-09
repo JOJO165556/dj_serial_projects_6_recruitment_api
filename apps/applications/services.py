@@ -3,22 +3,33 @@ from apps.jobs.models import JobOffer
 from rest_framework.exceptions import ValidationError
 from apps.notifications.services import create_notification
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def create_application(user, job_id, **validated_data):
     """
-    Crée une candidature.
+    Service Métier : Soumission d'une candidature.
+    1. Vérifie si l'utilisateur a le bon rôle.
+    2. Valide l'existence et l'activation de l'Offre.
+    3. Prévient les envois multiples (doublon).
+    4. Envoie une notification bilatérale (Candidat et Recruteur).
     """
 
     #Vérifier rôle
     if user.role != "CANDIDATE":
+        logger.warning(f"Unauthorized application attempt by {user.email}")
         raise ValidationError({"user": "Only candidates can apply"})
 
     #Vérifier job
     job = JobOffer.objects.filter(id=job_id, is_active=True).first()
     if not job:
+        logger.error(f"Invalid job_id={job_id} by {user.email}")
         raise ValidationError({"job": "Invalid or inactive job"})
 
     #Empêcher double candidature
     if Application.objects.filter(candidate=user, job_offer=job).exists():
+        logger.info(f"Duplicate application by {user.email} for job {job.title}")
         raise ValidationError({"application": "Already applied to this job"})
 
     #Notification candidat
@@ -35,15 +46,20 @@ def create_application(user, job_id, **validated_data):
         message=f"{user.email} applied to {job.title}"
     )
 
-    return Application.objects.create(
+    application = Application.objects.create(
         candidate=user,
         job_offer=job,
         **validated_data,
     )
+    logger.info(f"Application created by {user.email} for job {job.title}")
+    return application
 
 def update_application_status(user, application_id, status):
     """
-    Met à jour le statut d'une candidature.
+    Service Métier : Mise à jour du flux de recrutement.
+    S'assure que seul le propriétaire (Recruteur) de l'entreprise ayant
+    posté l'offre peut modifier le statut de la candidature.
+    Déclenche une notification d'update au profil candidat.
     """
 
     application = Application.objects.filter(id=application_id).first()
