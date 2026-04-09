@@ -1,0 +1,27 @@
+# Framework
+Django==6.0.3
+djangorestframework==3.17.1
+
+# Authentification JWT
+djangorestframework-simplejwt==5.5.1
+
+# Authentification OAuth (Google)
+django-allauth==65.15.1
+
+# Documentation API
+drf-spectacular==0.29.0
+
+# Filtrage
+django-filter==25.2
+
+# Variables d'environnement
+python-dotenv==1.2.2
+
+# Parsing d'URL de base de données
+dj-database-url==3.1.2
+
+# Administration UI
+django-jazzmin==3.0.4
+
+# Appels HTTP (verification token Google)
+requests==2.32.3
