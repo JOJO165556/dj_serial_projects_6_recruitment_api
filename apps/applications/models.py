@@ -3,6 +3,10 @@ from django.db import models
 from apps.core.models import TimeStampedModel
 
 class Application(TimeStampedModel):
+    """
+    Entité liant un User (Candidat) à une JobOffer (Offre).
+    Gère l'état d'avancement du recrutement via l'Enum Status.
+    """
     class Status(models.TextChoices):
         APPLIED = "APPLIED", "Applied"
         REVIEWED = "REVIEWED", "Reviewed"

@@ -2,6 +2,10 @@ from django.db import models
 from apps.core.models import TimeStampedModel
 
 class Company(TimeStampedModel):
+    """
+    Entité représentant la structure porteuse des offres d'emploi.
+    Un recruteur (owner) peut administrer plusieurs entreprises.
+    """
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 

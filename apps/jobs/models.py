@@ -2,7 +2,11 @@ from django.db import models
 from apps.core.models import TimeStampedModel
 
 class JobOffer(TimeStampedModel):
-
+    """
+    Entité au coeur de l'application : l'Offre d'Emploi.
+    Reliée à une entreprise (Company). 
+    Filtre automatiquement les postulations si is_active=False.
+    """
     class JobType(models.TextChoices):
         FULL_TIME = "FULL_TIME"
         PART_TIME = "PART_TIME"
@@ -31,7 +35,8 @@ class JobOffer(TimeStampedModel):
 
 class JobView(TimeStampedModel):
     """
-    track ques vues d'une offre d'emploi.
+    Modèle d'analytics enregistrant les clics/vues d'une offre d'emploi.
+    Permet de calculer le taux de conversion (Candidatures / Vues).
     """
 
     job = models.ForeignKey(

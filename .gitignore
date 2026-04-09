@@ -1,5 +1,26 @@
 __pycache__/
 *.py[cod]
+*$py.class
+*.pyc
+
+# Environnement
 .env
 venv/
+env/
+
+# Base de données
 db.sqlite3
+db.sqlite3-journal
+
+# Fichiers statiques et médias
+media/
+static_root/
+staticfiles/
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+.vscode/
+.DS_Store
