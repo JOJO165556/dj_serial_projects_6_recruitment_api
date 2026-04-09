@@ -97,7 +97,10 @@ LOGGING = {
 }
 
 AUTHENTICATION_BACKENDS = [
+    # Authentification standard Django (email/password)
     'django.contrib.auth.backends.ModelBackend',
+    # Authentification sociale via allauth (Google OAuth2)
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
