@@ -14,6 +14,9 @@ def create_user(username, email, password, role=None):
     Crée un nouvel utilisateur inactif par défaut en attente de vérification OTP.
     Gère le fallback implicite vers le rôle CANDIDATE (cf: defaults du Model).
     """
+    if role is None:
+        role = User.Role.CANDIDATE
+        
     return User.objects.create_user(
         username=username,
         email=email,
