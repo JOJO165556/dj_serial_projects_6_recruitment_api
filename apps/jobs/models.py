@@ -28,3 +28,21 @@ class JobOffer(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+class JobView(TimeStampedModel):
+    """
+    track ques vues d'une offre d'emploi.
+    """
+
+    job = models.ForeignKey(
+        "jobs.JobOffer",
+        on_delete=models.CASCADE,
+        related_name="views"
+    )
+
+    user = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Company
+from .services import create_company
 
 # Company
 class CompanySerializer(serializers.ModelSerializer):
@@ -9,6 +10,5 @@ class CompanySerializer(serializers.ModelSerializer):
         read_only_fields = ["owner"]
 
     def create(self, validated_data):
-        from .services import create_company
         owner = self.context["request"].user
         return create_company(owner=owner, **validated_data)

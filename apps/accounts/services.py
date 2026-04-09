@@ -1,24 +1,8 @@
 import random
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
 from django.utils import timezone
 
 from .models import User, EmailOTP
-
-# Auth Service
-def login_user(email, password):
-    user = authenticate(username=email, password=password)
-
-    if not user:
-        return None
-
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        "refresh": str(refresh),
-        "access": str(refresh.access_token),
-    }
 
 # User Service
 def create_user(username, email, password, role=None):
