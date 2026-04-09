@@ -21,5 +21,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         """
         Chaque user ne voit que ses notifs.
         """
+        if getattr(self, "swagger_fake_view", False):
+            return Notification.objects.none()
 
         return Notification.objects.filter(user=self.request.user)

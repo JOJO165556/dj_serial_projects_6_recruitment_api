@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse, inline_serializer
+from rest_framework import serializers as drf_serializers
 from apps.accounts.models import User
 
 import requests
@@ -21,6 +22,10 @@ class GoogleLoginView(APIView):
         summary="Connexion via Google",
         description="Échangez un Access Token Google contre une paire de tokens JWT de l'API. Le token Google doit être obtenu côté client (frontend) via le flux OAuth2.",
         tags=["Authentification"],
+        request=inline_serializer(
+            name="GoogleLoginRequest",
+            fields={"access_token": drf_serializers.CharField()}
+        ),
         responses={
             200: OpenApiResponse(description="Connexion réussie. Retourne access et refresh JWT."),
             400: OpenApiResponse(description="Token Google manquant dans le corps de la requête."),
